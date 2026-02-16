@@ -41,4 +41,11 @@ Players (Java/Bedrock) → Velocity Proxy (Docker Compose) → MC Servers (Ptero
 
 ---
 
+
+## Documentation
+
+- [Architecture Overview](docs/architecture.md)
+- [Plugins and Additional Software](docs/plugins_and_tools.md)
+
+---
 This README summarizes the architecture and purpose of the project to make it easier to understand and onboard new sessions or collaborators.

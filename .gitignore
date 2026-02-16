@@ -1,0 +1,48 @@
+
+
+# Node, Python, and system files
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+*.pid
+*.seed
+*.sock
+.env
+.env.*
+
+# Pterodactyl panel & wings runtime data
+/pterodactyl/database
+/pterodactyl/panel
+/pterodactyl/wings/lib/
+/pterodactyl/wings/logs/
+/pterodactyl/eggs/
+/pterodactyl/logs/
+/pterodactyl/backups/
+/pterodactyl/docs/
+/backups/
+/data/
+
+# Database and Redis volumes
+/var/lib/mysql/
+/var/lib/redis/
+
+# VSCode
+.vscode/
+
+# Traefik/Proxy/Certs (if present)
+/letsencrypt/
+/certs/
+
+# Misc
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Ignore local compose override files
+*override.yml
