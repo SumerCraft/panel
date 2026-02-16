@@ -7,9 +7,6 @@ services:
     # ports:
     #   - "${PANEL_PORT_HTTP:-}"
     #   - "${PANEL_PORT_HTTPS:-}"
-    links:
-      - database
-      - cache
     volumes:
       - "/srv/pterodactyl/var/:/app/var/"
       - "/srv/pterodactyl/nginx/:/etc/nginx/http.d/"
