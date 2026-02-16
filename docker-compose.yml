@@ -22,7 +22,7 @@ services:
       - mcnet
 
   panel:
-    image: ghcr.io/pterodactyl/panel:v1.12.1
+    image: ghcr.io/pterodactyl/panel:v1.11.11
     restart: always
     # ports:
     #   - "${PANEL_PORT_HTTP:-}"
