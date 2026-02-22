@@ -16,6 +16,7 @@ services:
     links:
       - cache
     volumes:
+      - "/srv/pterodactyl/code/:/app/"
       - "/srv/pterodactyl/var/:/app/var/"
       - "/srv/pterodactyl/nginx/:/etc/nginx/http.d/"
       - "/srv/pterodactyl/certs/:/etc/letsencrypt/"
