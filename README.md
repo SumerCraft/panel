@@ -5,33 +5,21 @@ SumerCraft is a Minecraft server network that uses a hybrid architecture to comb
 
 ## General Architecture
 
-- **Pterodactyl Panel + Wings**: Manages game servers (Paper, Fabric, Lobby, Plots, etc.) through a friendly web interface and multi-user support.
-- **Docker Compose**: Runs critical services such as the Velocity Proxy (entry point for Java and Bedrock players), centralized monitoring (Grafana, Loki, Alloy), and other infrastructure services.
-- All services share a Docker network (`mcnet`) for efficient integration and communication.
+- **Pterodactyl Panel + Wings**: All game servers and proxy services (including Velocity for Java and Bedrock).
+- **Velocity Proxies (Java & Bedrock)**: Both proxies are available as separate services. The Bedrock proxy is always kept updated to the latest supported version.
 
 ## Advantages of the hybrid approach
 
-- **Stability and control**: Velocity and monitoring run outside the Panel, ensuring uptime and full configuration control.
-- **Easy management and community support**: Game servers are managed from Pterodactyl, which is widely used and documented.
-- **Scalability and modularity**: It's easy to add new servers or services as the network grows.
-- **Centralized monitoring**: All logs and metrics are aggregated in Grafana/Loki for easy analysis and troubleshooting.
-
-## High-level diagram
-
-Players (Java/Bedrock) → Velocity Proxy (Docker Compose) → MC Servers (Pterodactyl Panel) → Monitoring (Grafana/Loki)
+- **Stability and control**: All proxies and servers are managed from Pterodactyl, ensuring unified configuration and uptime.
+- **Easy management and community support**: All services are managed from Pterodactyl, which is widely used and documented.
+- **Scalability and modularity**: It's easy to add new servers or proxy instances as the network grows.
 
 ## Main components
 
-- Velocity Proxy (Docker Compose)
-- Grafana, Loki, Alloy (Docker Compose)
+- Velocity Proxy Java (Pterodactyl)
+- Velocity Proxy Bedrock (Pterodactyl, always latest Bedrock-supported version)
 - Paper/Fabric/Plots Servers (Pterodactyl)
 - Pterodactyl Panel + Wings (web management and daemon)
-
-## Recommended requirements
-
-- Docker and Docker Compose
-- Pterodactyl Panel and Wings
-- 4+ CPU cores, 16+ GB RAM, 100+ GB SSD
 
 ## Current server hardware (single host)
 
@@ -46,6 +34,7 @@ Players (Java/Bedrock) → Velocity Proxy (Docker Compose) → MC Servers (Ptero
 
 - [Architecture Overview](docs/architecture.md)
 - [Plugins and Additional Software](docs/plugins_and_tools.md)
+- [Nodes and Servers Planning](docs/nodes_and_servers.md)
 
 ---
 This README summarizes the architecture and purpose of the project to make it easier to understand and onboard new sessions or collaborators.

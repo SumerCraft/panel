@@ -6,10 +6,7 @@ Establish a robust Minecraft network where Java and Bedrock players can connect,
 
 ## Hybrid Architecture
 
-This project uses a **hybrid approach**:
-
-- **Pterodactyl Panel + Wings**: Manages Minecraft game servers via a web interface with multi-user support and automated backups.
-- **Docker Compose**: Runs critical infrastructure services (proxy) independently for maximum stability.
+This project now uses **Pterodactyl** to manage all services, including Velocity proxies for both Java and Bedrock editions. All infrastructure is orchestrated through Pterodactyl for unified management and automation.
 
 ### Why this architecture?
 
@@ -17,32 +14,35 @@ This project uses a **hybrid approach**:
 - **Community support**: Game servers are managed with Pterodactyl, a widely adopted solution.
 - **Scalability**: New servers or services can be added modularly.
 
-
 ## General Structure
 
-```
-Players (Java/Bedrock)
-   ↓
-Velocity Proxy (Docker Compose)
-   ↓
-Pterodactyl Game Servers (Lobby, Survival, Plots, etc.)
-```
 
+```mermaid
+flowchart LR
+    A["Players (Java/Bedrock)"]
+    B["Velocity Proxy Java (Pterodactyl)"]
+    C["Velocity Proxy Bedrock (Pterodactyl)"]
+    D["Pterodactyl Game Servers (Lobby, Survival, Plots, etc.)"]
+
+    A -- Java --> B
+    A -- Bedrock --> C
+    B --> D
+    C --> D
+```
 
 ## Main Components
 
-### Infrastructure (Docker Compose)
-- **Velocity Proxy**: Main entry point and router for all players.
-- **(Optional) ViaProxy**: For Bedrock legacy support if needed.
 
-### Game Servers (Pterodactyl)
-- Managed via web UI (Lobby, Survival, Plots, etc.)
+### Proxies
+- **Velocity Java**: Proxy for Java Edition players.
+- **Velocity Bedrock**: Proxy for Bedrock Edition players, kept updated to the latest Bedrock-supported Velocity version.
+
+### Game Servers
+- All Minecraft servers (Lobby, Survival, Plots, etc.).
 - Multi-user, backup, and resource management features.
 
-
 ## Networking
-All services share the Docker network `mcnet` for seamless communication between infrastructure and game servers.
-
+All services (proxies and game servers) are managed and networked through Pterodactyl, ensuring seamless communication and unified orchestration.
 
 ## User Flow
 1. Player connects (Java or Bedrock)
@@ -50,19 +50,16 @@ All services share the Docker network `mcnet` for seamless communication between
 3. Player enters the lobby or selected game server (managed by Pterodactyl)
 4. Player activity and logs can be monitored (future implementation)
 
-
 ## Key Features
-- Java and Bedrock support
-
-- Multi-user management via Pterodactyl
+- Java and Bedrock support (separate Velocity proxies for each)
+- Unified management of proxies and servers via Pterodactyl
 - Modular and scalable architecture
-- Resilient infrastructure (critical services separated)
-
+- Resilient infrastructure (all services managed in one panel)
 
 ## Scalability
-- Add new game servers via Pterodactyl Panel and register them in Velocity config.
-- Add new nodes by installing Wings and connecting to the shared network.
-
+- Add new game servers or proxy instances easily.
+- Easily update Velocity Bedrock to the latest supported version as needed.
+- Add new nodes by installing Wings and connecting to the panel.
 
 ## Server Requirements
 - Minimum: 4 CPU cores, 16 GB RAM, 100 GB SSD
@@ -78,7 +75,7 @@ All services share the Docker network `mcnet` for seamless communication between
 2. Install Pterodactyl Panel and Wings
 3. Configure Wings to use the shared Docker network
 4. Deploy infrastructure services with Docker Compose
-5. Add and manage game servers via the Pterodactyl Panel
+5. Add and manage game servers
 
 ---
-This document provides a high-level overview of the hybrid architecture for SumerCraft, focusing on simplicity and modularity.
+This document provides a high-level overview of the SumerCraft architecture, focusing on simplicity and modularity. Docker Compose is now only used to deploy the Panel and Wings; all Velocity proxies and Minecraft servers are managed directly by Pterodactyl.
