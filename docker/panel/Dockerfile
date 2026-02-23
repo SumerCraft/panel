@@ -24,8 +24,16 @@ RUN echo 'WEBUSER="nginx";\nOWNERSHIP="nginx:nginx";\nUSERSHELL="/bin/sh";\nPERM
 RUN chown nginx:nginx /app/.blueprintrc && chmod 644 /app/.blueprintrc
 # 3. Install Node dependencies
 RUN npm i -g yarn && yarn install
+
 # 4. Make blueprint.sh executable and run it with bash
 RUN chmod +x /app/blueprint.sh && bash /app/blueprint.sh
+
+# Forzar .blueprintrc correcto después de instalar Blueprint
+RUN echo 'WEBUSER="nginx";\nOWNERSHIP="nginx:nginx";\nUSERSHELL="/bin/sh";\nPERMISSIONS="u=rwX,g=rX,o=rX";' > /app/.blueprintrc \
+	&& chown nginx:nginx /app/.blueprintrc && chmod 644 /app/.blueprintrc
+
+# Asegurar permisos ejecutables en node_modules/.bin para evitar errores con cross-env
+RUN chmod -R +x /app/node_modules/.bin
 
 # Opcional: fuerza permisos correctos al final
 RUN chown -R nginx:nginx /app && \
