@@ -1,13 +1,9 @@
-
-
 FROM ghcr.io/pterodactyl/panel:v1.12.1
 
-# Copy plugin manager directly to /app
-# RUN git clone --depth=1 https://github.com/imTheoDoR/pterodactyl-plugin-manager.git /tmp/plugin && cp -r /tmp/plugin/* /app && rm -rf /tmp/plugin
-# Install Blueprint dependencies
+# Install Blueprint and system dependencies
 RUN apk add --no-cache ca-certificates curl git gnupg unzip wget zip nodejs npm yarn bash ncurses icu-libs musl-locales musl-locales-lang libc6-compat
 
-# Set UTF-8 locale environment
+# Set UTF-8 locale environment for proper encoding
 ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 RUN echo "export LANG=en_US.UTF-8" >> /etc/profile \
@@ -18,28 +14,17 @@ RUN wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/re
 	&& unzip -o release.zip \
 	&& rm release.zip
 
-# 1. Create .blueprintrc with nginx configuration
-RUN echo 'WEBUSER="nginx";\nOWNERSHIP="nginx:nginx";\nUSERSHELL="/bin/sh";\nPERMISSIONS="u=rwX,g=rX,o=rX";' > /app/.blueprintrc
-# 2. Set correct owner and permissions for .blueprintrc
-RUN chown nginx:nginx /app/.blueprintrc && chmod 644 /app/.blueprintrc
-# 3. Install Node dependencies
+# Install Node.js dependencies for Blueprint
 RUN npm i -g yarn && yarn install
 
-# 4. Make blueprint.sh executable and run it with bash
+# Make blueprint.sh executable and run it with bash
 RUN chmod +x /app/blueprint.sh && bash /app/blueprint.sh
 
-# Forzar .blueprintrc correcto después de instalar Blueprint
-RUN echo 'WEBUSER="nginx";\nOWNERSHIP="nginx:nginx";\nUSERSHELL="/bin/sh";\nPERMISSIONS="u=rwX,g=rX,o=rX";' > /app/.blueprintrc \
-	&& chown nginx:nginx /app/.blueprintrc && chmod 644 /app/.blueprintrc
+# Copy custom entrypoint script to container root
+COPY docker/panel/scripts/entrypoint.sh /entrypoint.sh
 
-# Asegurar permisos ejecutables en node_modules/.bin para evitar errores con cross-env
-RUN chmod -R +x /app/node_modules/.bin
+# Make entrypoint script executable
+RUN chmod +x /entrypoint.sh
 
-# Opcional: fuerza permisos correctos al final
-RUN chown -R nginx:nginx /app && \
-	find /app -type d -exec chmod 755 {} \; && \
-	find /app -type f -exec chmod 644 {} \; && \
-	find /app -type f -name "*.sh" -exec chmod 755 {} \; && \
-	chown -R nginx:nginx /app/storage && \
-	find /app/storage -type d -exec chmod 775 {} \; && \
-	find /app/storage -type f -exec chmod 664 {} \;
+# Use custom entrypoint to ensure runtime configuration and permissions
+ENTRYPOINT ["/entrypoint.sh"]
