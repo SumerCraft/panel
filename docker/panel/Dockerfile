@@ -18,18 +18,20 @@ RUN wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/re
 	&& unzip -o release.zip \
 	&& rm release.zip
 
-
-# Create .blueprintrc with nginx configuration before running Blueprint
+# 1. Create .blueprintrc with nginx configuration
 RUN echo 'WEBUSER="nginx";\nOWNERSHIP="nginx:nginx";\nUSERSHELL="/bin/sh";\nPERMISSIONS="u=rwX,g=rX,o=rX";' > /app/.blueprintrc
-
-# Install Node dependencies
+# 2. Set correct owner and permissions for .blueprintrc
+RUN chown nginx:nginx /app/.blueprintrc && chmod 644 /app/.blueprintrc
+# 3. Install Node dependencies
 RUN npm i -g yarn && yarn install
-
-# Make blueprint.sh executable and run it with bash
+# 4. Make blueprint.sh executable and run it with bash
 RUN chmod +x /app/blueprint.sh && bash /app/blueprint.sh
 
 # Opcional: fuerza permisos correctos al final
 RUN chown -R nginx:nginx /app && \
 	find /app -type d -exec chmod 755 {} \; && \
 	find /app -type f -exec chmod 644 {} \; && \
-	find /app -type f -name "*.sh" -exec chmod 755 {} \;
+	find /app -type f -name "*.sh" -exec chmod 755 {} \; && \
+	chown -R nginx:nginx /app/storage && \
+	find /app/storage -type d -exec chmod 775 {} \; && \
+	find /app/storage -type f -exec chmod 664 {} \;
